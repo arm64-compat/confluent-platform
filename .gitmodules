@@ -16,3 +16,6 @@
 [submodule "control-center-images"]
 	path = control-center-images
 	url = https://github.com/confluentinc/control-center-images.git
+[submodule "kafka-replicator-images"]
+	path = kafka-replicator-images
+	url = https://github.com/confluentinc/kafka-replicator-images.git
