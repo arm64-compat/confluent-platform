@@ -16,14 +16,20 @@ addons:
 
 env:
   global:
-  - MVN="mvn -B --settings=settings.xml -Ddockerfile-maven-plugin.version=1.4.14-SNAPSHOT"
   - DOCKER_REGISTRY=ghcr.io
   - ZULU_JDK_VERSION=11.0.15-1
   - CONFLUENT_VERSION=7.1.1
 
 before_script:
-- export CONFLUENT_VERSION=$(mvn -f common-docker/pom.xml -q help:evaluate -Dexpression=project.version -DforceStdout=true)
-- export MVN="$MVN -Ddocker.registry=$DOCKER_REGISTRY/arm64-compat/ -DCONFLUENT_VERSION=CONFLUENT_VERSION -Dubi.zulu.openjdk.version=$ZULU_JDK_VERSION"
+- export MVN="mvn -s settings.xml"
+- export CONFLUENT_VERSION=$($MVN -f common-docker/pom.xml -q help:evaluate -Dexpression=project.version -DforceStdout=true)
+- export CONFLUENT_REPO_VERSION=$($CONFLUENT_VERSION | rev | cut -d. -f2- | rev)
+- export CONFLUENT_PACKAGES_REPO="https://packages.confluent.io/rpm/$CONFLUENT_REPO_VERSION"
+- export MVN="$MVN -Ddockerfile-maven-plugin.version=1.4.14-SNAPSHOT"
+- export MVN="$MVN -Ddocker.registry=$DOCKER_REGISTRY/arm64-compat/"
+- export MVN="$MVN -DCONFLUENT_VERSION=CONFLUENT_VERSION"
+- export MVN="$MVN -Dubi.zulu.openjdk.version=$ZULU_JDK_VERSION"
+- export MVN="$MVN -DCONFLUENT_PACKAGES_REPO=$CONFLUENT_PACKAGES_REPO"
 - pip install tox
 
 stages:
