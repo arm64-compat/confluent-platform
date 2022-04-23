@@ -1,0 +1,42 @@
+language: java
+
+dist: xenial
+
+os: linux
+
+cache:
+  directories:
+  - "$HOME/.m2"
+
+addons:
+  apt:
+    packages:
+    - maven
+    - python3.9
+
+env:
+  global:
+  - MVN="mvn -B --settings=settings.xml -Ddockerfile-maven-plugin.version=1.4.14-SNAPSHOT"
+  - DOCKER_REGISTRY=ghcr.io
+  - ZULU_JDK_VERSION=11.0.15-1
+  - CONFLUENT_VERSION=7.1.1
+
+before_script:
+- export CONFLUENT_VERSION=$(mvn -f common-docker/pom.xml -q org.apache.maven.plugins:maven-help-plugin:3.2.0:evaluate -Dexpression=project.version -DforceStdout=true)
+- export MVN="$MVN -Ddocker.registry=$DOCKER_REGISTRY/arm64-compat/ -DCONFLUENT_VERSION=CONFLUENT_VERSION -Dubi.zulu.openjdk.version=$ZULU_JDK_VERSION"
+- pip install tox
+
+stages:
+- build
+
+services:
+- docker
+
+jobs:
+  include:
+  - name: "ARM64 common-docker image build"
+    stage: build
+    arch: arm64
+    jdk: openjdk11
+    script:
+    - $MVN -f common-docker/pom.xml -Pdocker clean install
