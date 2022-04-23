@@ -57,16 +57,14 @@ jobs:
     arch: arm64
     jdk: openjdk11
     env:
-      ARTIFACT_NAME: cp-base-new
+      BUILD_DIR: common-docker
     script:
-    - $MVN -f common-docker/pom.xml -Pdocker clean package
-    after_script:
-    - &docker_image export DOCKER_IMAGE="$DOCKER_REGISTRY/$DOCKER_REPOSITORY/confluentinc/$ARTIFACT_NAME:$DOCKER_TAG"
+    - $MVN -f $BUILD_DIR/pom.xml -Pdocker clean package
     deploy: &push_image
       provider: script
       on:
         all_branches: true
-      script: docker push $DOCKER_IMAGE
+      script: ./push-images.sh
   # - &build-registry
   #   name: "ARM64 schema-registry image build"
   #   stage: build-registry
