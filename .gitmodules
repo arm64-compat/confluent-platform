@@ -1,0 +1,3 @@
+[submodule "common-docker"]
+	path = common-docker
+	url = https://github.com/confluentinc/common-docker.git
