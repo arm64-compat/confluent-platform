@@ -1,9 +1,9 @@
 # install the necessary dependencies
-apt-get -q update
-apt-get -yq install gnupg curl
+sudo apt-get -q update
+sudo apt-get -yq install gnupg curl
 
 # add Azul's public key
-apt-key adv \
+sudo apt-key adv \
   --keyserver hkp://keyserver.ubuntu.com:80 \
   --recv-keys 0xB1998361219BD9C9
 
@@ -12,9 +12,9 @@ apt-key adv \
 curl -O https://cdn.azul.com/zulu/bin/zulu-repo_1.0.0-3_all.deb
 
 # install the package
-apt-get install ./zulu-repo_1.0.0-3_all.deb
+sudo apt-get install ./zulu-repo_1.0.0-3_all.deb
 
 # update the package sources
-apt-get update
+sudo apt-get update
 
-apt-get install zulu11-jdk
+sudo apt-get install zulu11-jdk
