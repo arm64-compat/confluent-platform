@@ -22,21 +22,26 @@ env:
   - CONFLUENT_VERSION=7.1.1
 
 before_script:
-- export CONFLUENT_VERSION=$(mvn -f common-docker/pom.xml -q org.apache.maven.plugins:maven-help-plugin:3.2.0:evaluate -Dexpression=project.version -DforceStdout=true)
+- export CONFLUENT_VERSION=$(mvn -f common-docker/pom.xml -q help:evaluate -Dexpression=project.version -DforceStdout=true)
 - export MVN="$MVN -Ddocker.registry=$DOCKER_REGISTRY/arm64-compat/ -DCONFLUENT_VERSION=CONFLUENT_VERSION -Dubi.zulu.openjdk.version=$ZULU_JDK_VERSION"
 - pip install tox
 
 stages:
-- build
+- build-common
 
 services:
 - docker
 
 jobs:
   include:
-  - name: "ARM64 common-docker image build"
-    stage: build
+  - &build-common-docker
+    name: "ARM64 common-docker image build"
+    stage: build-common-docker
     arch: arm64
     jdk: openjdk11
     script:
-    - $MVN -f common-docker/pom.xml -Pdocker clean install
+    - $MVN -f common-docker/pom.xml -Pdocker clean package
+  - <<: *build-common-docker
+    name: "AMD64 common-docker image build"
+    arch: amd64
+
