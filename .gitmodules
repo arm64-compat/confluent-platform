@@ -10,3 +10,6 @@
 [submodule "kafka-rest-images"]
 	path = kafka-rest-images
 	url = https://github.com/confluentinc/kafka-rest-images.git
+[submodule "ksql-images"]
+	path = ksql-images
+	url = https://github.com/confluentinc/ksql-images
