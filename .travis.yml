@@ -25,7 +25,7 @@ env:
 
 before_script:
 - export MVN="mvn -s settings.xml"
-- export CONFLUENT_VERSION=$($MVN -f common-docker/pom.xml -q help:evaluate -Dexpression=project.version -DforceStdout=true)
+- export CONFLUENT_VERSION=$($MVN -f common-docker/pom.xml -q org.apache.maven.plugins:maven-help-plugin:3.2.0:evaluate -Dexpression=project.version -DforceStdout=true)
 - export CONFLUENT_REPO_VERSION=$($CONFLUENT_VERSION | rev | cut -d. -f2- | rev)
 - export CONFLUENT_PACKAGES_REPO="https://packages.confluent.io/rpm/$CONFLUENT_REPO_VERSION"
 - export MVN="$MVN -Ddockerfile-maven-plugin.version=1.4.14-SNAPSHOT"
