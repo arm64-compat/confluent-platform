@@ -1,6 +1,6 @@
 language: java
 
-dist: xenial
+dist: focal
 
 os: linux
 
@@ -54,6 +54,7 @@ jobs:
     arch: arm64
     install: ./install-zulu.sh
     script:
+    - java -version
     - $MVN -f common-docker/pom.xml -Pdocker clean package
     deploy: &push_image
       provider: script
