@@ -13,3 +13,6 @@
 [submodule "ksql-images"]
 	path = ksql-images
 	url = https://github.com/confluentinc/ksql-images
+[submodule "control-center-images"]
+	path = control-center-images
+	url = https://github.com/confluentinc/control-center-images.git
