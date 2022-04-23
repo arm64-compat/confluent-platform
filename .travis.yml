@@ -55,7 +55,7 @@ jobs:
     name: "ARM64 common-docker image build"
     stage: build-common-docker
     arch: arm64
-    java: openjdk11
+    jdk: openjdk11
     env:
       ARTIFACT_NAME: cp-base-new
     script:
@@ -67,15 +67,15 @@ jobs:
       on:
         all_branches: true
       script: docker push $DOCKER_IMAGE
-  - &build-registry
-    name: "ARM64 schema-registry image build"
-    stage: build-registry
-    arch: arm64
-    java: openjdk11
-    env:
-      ARTIFACT_NAME: cp-schema-registry
-    script:
-    - $MVN -f schema-registry-images/pom.xml -Pdocker clean package
-    after_script:
-    - *docker_image
-    deploy: *push_image
+  # - &build-registry
+  #   name: "ARM64 schema-registry image build"
+  #   stage: build-registry
+  #   arch: arm64
+  #   java: openjdk11
+  #   env:
+  #     ARTIFACT_NAME: cp-schema-registry
+  #   script:
+  #   - $MVN -f schema-registry-images/pom.xml -Pdocker clean package
+  #   after_script:
+  #   - *docker_image
+  #   deploy: *push_image
