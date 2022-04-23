@@ -1,3 +1,6 @@
 [submodule "common-docker"]
 	path = common-docker
 	url = https://github.com/confluentinc/common-docker.git
+[submodule "schema-registry-images"]
+	path = schema-registry-images
+	url = https://github.com/confluentinc/schema-registry-images.git
