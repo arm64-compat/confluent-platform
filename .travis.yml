@@ -33,16 +33,17 @@ before_deploy:
 
 stages:
 - build-common
-- build-registry
+- build-1
+- build-2
 
 services:
 - docker
 
 jobs:
   include:
-  - &build-common-docker
+  - &build-image-job
     name: "ARM64 common-docker image build"
-    stage: build-common-docker
+    stage: build-common
     arch: arm64
     jdk: openjdk11
     env:
@@ -54,15 +55,39 @@ jobs:
       on:
         all_branches: true
       script: ./push-images.sh
-  # - &build-registry
-  #   name: "ARM64 schema-registry image build"
-  #   stage: build-registry
-  #   arch: arm64
-  #   java: openjdk11
-  #   env:
-  #     ARTIFACT_NAME: cp-schema-registry
-  #   script:
-  #   - $MVN -f schema-registry-images/pom.xml -Pdocker clean package
-  #   after_script:
-  #   - *docker_image
-  #   deploy: *push_image
+  - <<: *build-image-job
+    name: "ARM64 schema-registry-images build"
+    stage: build-1
+    arch: arm64
+    env:
+      BUILD_DIR: schema-registry-images
+  - <<: *build-image-job
+    name: "ARM64 ksql-images build"
+    stage: build-1
+    arch: arm64
+    env:
+      BUILD_DIR: ksql-images
+  - <<: *build-image-job
+    name: "ARM64 kafka-images build"
+    stage: build-1
+    arch: arm64
+    env:
+      BUILD_DIR: kafka-images
+  - <<: *build-image-job
+    name: "ARM64 kafka-rest-images build"
+    stage: build-1
+    arch: arm64
+    env:
+      BUILD_DIR: kafka-rest-images
+  - <<: *build-image-job
+    name: "ARM64 control-center-images build"
+    stage: build-1
+    arch: arm64
+    env:
+      BUILD_DIR: control-center-images
+  - <<: *build-image-job
+    name: "ARM64 kafka-replicator-images build"
+    stage: build-2
+    arch: arm64
+    env:
+      BUILD_DIR: kafka-replicator-images
