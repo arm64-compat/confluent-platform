@@ -17,6 +17,7 @@ addons:
 env:
   global:
   - DOCKER_REGISTRY=ghcr.io
+  - DOCKER_REPOSITORY=arm64-compat
   - ZULU_JDK_VERSION=11.0.15-1
   - CONFLUENT_VERSION=7.1.1
   - secure: "mINNQvWVcdaB0uej0WCFW+wHe3rUMYJ4BW2nExB/t0U2CxEJXnsNWmu+Bl7su1eOCuu6KUe/9za+wY2PzDU6rsX7z37Pnz9K/Lgg5GoLQz/wPWmpHbt+G7K2aTxjuIvN4aMGrk7tI5J5wSKwtmvfGJg9lXhyULo4N2X7gWfaMNmqwmU0P29DWDzh+t7s2HgJcL6ADJi2Tc2yha1lP/8YuvHQ8me7VG7jNOv7QxhCU8fY3cmn5ubhQQzAP2NWRoB0/lGffT2wW6iX7DPon5Cghxgn1TwvPnkalK8hTm00uvHE0WFSDRWG0pvP5/6hCFFA4y5HAPfs7DHeWygScl37eh1T7fldM+JOVBTWKZY92bujP7pNjxCZ3ho3pDf2FeYPihxILA0cG/ypBoEuCSKw76svX+AesqPmQwyLnPjC+TeM5K2iJqCbCFegNLAUtNKrkfq0D2GVd5KqF3TT4eScq2Dcy2jELLYddDFijVIAZmDSZAEXbPxvg0bw7XBcqbsdiUL3YoekyyIENaUnuTDCBLV8B0El6M/PlW7KrHG0NNUJWEj1JZOb0mgiH74QVwlqs8yXCUref8GX3lZJ2X/VWXhtuDKRZva9lVyR0hGaocuPxvatrk5GwmCG3T+tc0ZlSB5VAkULjY9XE7VDx9to25PH+cYbX4KfnfRu/sK9ZOU="
@@ -25,15 +26,17 @@ env:
 
 before_script:
 - export MVN="mvn -s settings.xml"
-- export CONFLUENT_VERSION=$($MVN -f common-docker/pom.xml -q org.apache.maven.plugins:maven-help-plugin:3.2.0:evaluate -Dexpression=project.version -DforceStdout=true)
-- export CONFLUENT_REPO_VERSION=$(echo $CONFLUENT_VERSION | rev | cut -d. -f2- | rev)
+- export MVN_HELP="$MVN -q org.apache.maven.plugins:maven-help-plugin:3.2.0:evaluate -DforceStdout=true"
+- export CONFLUENT_VERSION=$(sh -c "$MVN_HELP -f common-docker/pom.xml -Dexpression=project.version")
+- export CONFLUENT_REPO_VERSION=$(sh -c "echo $CONFLUENT_VERSION | rev | cut -d. -f2- | rev")
 - export CONFLUENT_PACKAGES_REPO="https://packages.confluent.io/rpm/$CONFLUENT_REPO_VERSION"
+- export DOCKER_TAG="$CONFLUENT_VERSION-$TRAVIS_CPU_ARCH"
 - export MVN="$MVN -Ddockerfile-maven-plugin.version=1.4.14-SNAPSHOT"
-- export MVN="$MVN -Ddocker.registry=$DOCKER_REGISTRY/arm64-compat/"
-- export MVN="$MVN -DCONFLUENT_VERSION=CONFLUENT_VERSION"
+- export MVN="$MVN -Ddocker.registry=$DOCKER_REGISTRY/$DOCKER_REPOSITORY/"
+- export MVN="$MVN -DCONFLUENT_VERSION=$CONFLUENT_VERSION"
 - export MVN="$MVN -Dubi.zulu.openjdk.version=$ZULU_JDK_VERSION"
 - export MVN="$MVN -DCONFLUENT_PACKAGES_REPO=$CONFLUENT_PACKAGES_REPO"
-- export MVN="$MVN -Ddocker.tag=$CONFLUENT_VERSION-$TRAVIS_CPU_ARCH"
+- export MVN="$MVN -Ddocker.tag=$DOCKER_TAG"
 - pip install tox
 
 before_deploy:
@@ -52,13 +55,15 @@ jobs:
     name: "ARM64 common-docker image build"
     stage: build-common-docker
     arch: arm64
-    install: ./install-zulu.sh
+    java: openjdk11
+    env:
+      ARTIFACT_NAME: cp-base-new
     script:
-    - java -version
     - $MVN -f common-docker/pom.xml -Pdocker clean package
+    after_script:
+    - export DOCKER_IMAGE="$DOCKER_REGISTRY/$DOCKER_REPOSITORY/confluentinc/$ARTIFACT_NAME:$DOCKER_TAG"
     deploy: &push_image
       provider: script
       on:
         all_branches: true
-      script: docker push ${DRUID_IMAGE}
-
+      script: docker push $DOCKER_IMAGE
