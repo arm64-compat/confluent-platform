@@ -44,7 +44,7 @@ before_deploy:
 
 stages:
 - build-common
-- build-common-manifest
+- build-registry
 
 services:
 - docker
@@ -61,9 +61,21 @@ jobs:
     script:
     - $MVN -f common-docker/pom.xml -Pdocker clean package
     after_script:
-    - export DOCKER_IMAGE="$DOCKER_REGISTRY/$DOCKER_REPOSITORY/confluentinc/$ARTIFACT_NAME:$DOCKER_TAG"
+    - &docker_image export DOCKER_IMAGE="$DOCKER_REGISTRY/$DOCKER_REPOSITORY/confluentinc/$ARTIFACT_NAME:$DOCKER_TAG"
     deploy: &push_image
       provider: script
       on:
         all_branches: true
       script: docker push $DOCKER_IMAGE
+  - &build-registry
+    name: "ARM64 schema-registry image build"
+    stage: build-registry
+    arch: arm64
+    java: openjdk11
+    env:
+      ARTIFACT_NAME: cp-schema-registry
+    script:
+    - $MVN -f schema-registry-images/pom.xml -Pdocker clean package
+    after_script:
+    - *docker_image
+    deploy: *push_image
