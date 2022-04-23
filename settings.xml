@@ -1,0 +1,70 @@
+<!-- 
+Used by Travis to deploy snapshots to Github Repository. See .travis.yml for more.
+-->
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
+                      http://maven.apache.org/xsd/settings-1.0.0.xsd">
+
+  <profiles>
+    <profile>
+      <id>github</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <pluginRepositories>
+        <pluginRepository>
+          <id>github</id>
+          <url>https://maven.pkg.github.com/arm64-compat/dockerfile-maven-plugin</url>
+          <snapshots>
+            <enabled>true</enabled>
+          </snapshots>
+          <releases>
+            <enabled>false</enabled>
+          </releases>
+        </pluginRepository>
+        <pluginRepository>
+          <id>confluent</id>
+         <url>https://packages.confluent.io/maven/</url>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
+          <releases>
+            <enabled>true</enabled>
+          </releases>
+        </pluginRepository>
+      </pluginRepositories>
+      <repositories>
+        <repository>
+          <id>github</id>
+          <url>https://maven.pkg.github.com/arm64-compat/dockerfile-maven-plugin</url>
+          <snapshots>
+            <enabled>true</enabled>
+          </snapshots>
+          <releases>
+            <enabled>false</enabled>
+          </releases>
+        </repository>
+        <repository>
+          <id>confluent</id>
+         <url>https://packages.confluent.io/maven/</url>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
+          <releases>
+            <enabled>true</enabled>
+          </releases>
+        </repository>
+      </repositories>
+    </profile>
+  </profiles>
+
+  <servers>
+    <server>
+      <id>github</id>
+      <username>${GITHUB_USERNAME}</username>
+      <password>${GITHUB_TOKEN}</password>
+    </server>
+  </servers>
+
+</settings>
