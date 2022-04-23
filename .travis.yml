@@ -36,8 +36,12 @@ before_script:
 - export MVN="$MVN -Ddocker.tag=$CONFLUENT_VERSION-$TRAVIS_CPU_ARCH"
 - pip install tox
 
+before_deploy:
+- echo $GITHUB_TOKEN | docker login -u $GITHUB_USERNAME --password-stdin $DOCKER_REGISTRY
+
 stages:
 - build-common
+- build-common-manifest
 
 services:
 - docker
@@ -48,10 +52,12 @@ jobs:
     name: "ARM64 common-docker image build"
     stage: build-common-docker
     arch: arm64
-    jdk: openjdk11
+    install: ./install-zulu.sh
     script:
     - $MVN -f common-docker/pom.xml -Pdocker clean package
-  - <<: *build-common-docker
-    name: "AMD64 common-docker image build"
-    arch: amd64
+    deploy: &push_image
+      provider: script
+      on:
+        all_branches: true
+      script: docker push ${DRUID_IMAGE}
 
