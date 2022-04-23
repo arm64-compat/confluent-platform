@@ -7,3 +7,6 @@
 [submodule "kafka-images"]
 	path = kafka-images
 	url = https://github.com/confluentinc/kafka-images.git
+[submodule "kafka-rest-images"]
+	path = kafka-rest-images
+	url = https://github.com/confluentinc/kafka-rest-images.git
