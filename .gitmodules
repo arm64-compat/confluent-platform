@@ -4,3 +4,6 @@
 [submodule "schema-registry-images"]
 	path = schema-registry-images
 	url = https://github.com/confluentinc/schema-registry-images.git
+[submodule "kafka-images"]
+	path = kafka-images
+	url = https://github.com/confluentinc/kafka-images.git
