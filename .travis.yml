@@ -32,12 +32,9 @@ before_deploy:
 - echo $GITHUB_TOKEN | docker login -u $GITHUB_USERNAME --password-stdin $DOCKER_REGISTRY
 
 stages:
-- name: build-common
-  if: false
-- name: build-1
-  if: false
-- name: build-2
-  if: false
+- build-common
+- build-1
+- build-2
 - manifest
 
 services:
@@ -49,7 +46,7 @@ jobs:
     name: "ARM64 common-docker image build"
     stage: build-common
     arch: arm64
-    if: false
+    if: env(BUILD_ARM) != false
     jdk: openjdk11
     env:
       BUILD_DIR: common-docker
@@ -64,81 +61,94 @@ jobs:
     name: "ARM64 schema-registry-images build"
     stage: build-1
     arch: arm64
+    if: env(BUILD_ARM) != false
     env:
       BUILD_DIR: schema-registry-images
   - <<: *build-image-job
     name: "ARM64 ksql-images build"
     stage: build-1
     arch: arm64
+    if: env(BUILD_ARM) != false
     env:
       BUILD_DIR: ksql-images
   - <<: *build-image-job
     name: "ARM64 kafka-images build"
     stage: build-1
     arch: arm64
+    if: env(BUILD_ARM) != false
     env:
       BUILD_DIR: kafka-images
   - <<: *build-image-job
     name: "ARM64 kafka-rest-images build"
     stage: build-1
     arch: arm64
+    if: env(BUILD_ARM) != false
     env:
       BUILD_DIR: kafka-rest-images
   - <<: *build-image-job
     name: "ARM64 control-center-images build"
     stage: build-1
     arch: arm64
+    if: env(BUILD_ARM) != false
     env:
       BUILD_DIR: control-center-images
   - <<: *build-image-job
     name: "ARM64 kafka-replicator-images build"
     stage: build-2
-    arch: arm64    
+    arch: arm64
+    if: env(BUILD_ARM) != false
     env:
       BUILD_DIR: kafka-replicator-images
   - <<: *build-image-job
     name: "AMD64 common-docker image build"
     stage: build-common
-    if: true
     arch: amd64
+    if: env(BUILD_AMD) != false
   - <<: *build-image-job
     name: "AMD64 schema-registry-images build"
     stage: build-1
     arch: amd64
+    if: env(BUILD_AMD) != false
     env:
       BUILD_DIR: schema-registry-images
   - <<: *build-image-job
     name: "AMD64 ksql-images build"
     stage: build-1
     arch: amd64
+    if: env(BUILD_AMD) != false
     env:
       BUILD_DIR: ksql-images
   - <<: *build-image-job
     name: "AMD64 kafka-images build"
     stage: build-1
     arch: amd64
+    if: env(BUILD_AMD) != false
     env:
       BUILD_DIR: kafka-images
   - <<: *build-image-job
     name: "AMD64 kafka-rest-images build"
     stage: build-1
     arch: amd64
+    if: env(BUILD_AMD) != false
     env:
       BUILD_DIR: kafka-rest-images
   - <<: *build-image-job
     name: "AMD64 control-center-images build"
     stage: build-1
     arch: amd64
+    if: env(BUILD_AMD) != false
     env:
       BUILD_DIR: control-center-images
   - <<: *build-image-job
     name: "AMD64 kafka-replicator-images build"
     stage: build-2
     arch: amd64
+    if: env(BUILD_AMD) != false
     env:
       BUILD_DIR: kafka-replicator-images
   - name: "Create manifest"
     stage: manifest
+    if: env(CREATE_MANIFEST) != false
     script: skip
     deploy: &push_image
       provider: script
