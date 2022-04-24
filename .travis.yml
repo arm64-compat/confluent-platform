@@ -34,6 +34,7 @@ stages:
 - build-common
 - build-1
 - build-2
+- manifest
 
 services:
 - docker
@@ -99,42 +100,43 @@ jobs:
   - <<: *build-image-job
     name: "AMD64 schema-registry-images build"
     stage: build-1
-    if: true
     arch: amd64
     env:
       BUILD_DIR: schema-registry-images
   - <<: *build-image-job
     name: "AMD64 ksql-images build"
     stage: build-1
-    if: true
     arch: amd64
     env:
       BUILD_DIR: ksql-images
   - <<: *build-image-job
     name: "AMD64 kafka-images build"
     stage: build-1
-    if: true
     arch: amd64
     env:
       BUILD_DIR: kafka-images
   - <<: *build-image-job
     name: "AMD64 kafka-rest-images build"
     stage: build-1
-    if: true
     arch: amd64
     env:
       BUILD_DIR: kafka-rest-images
   - <<: *build-image-job
     name: "AMD64 control-center-images build"
     stage: build-1
-    if: true
     arch: amd64
     env:
       BUILD_DIR: control-center-images
   - <<: *build-image-job
     name: "AMD64 kafka-replicator-images build"
     stage: build-2
-    if: true
     arch: amd64
     env:
       BUILD_DIR: kafka-replicator-images
+  - name: "Create manifest"
+    stage: manifest
+    deploy: &push_image
+      provider: script
+      on:
+        all_branches: true
+      script: find . -type f -name '*Dockerfile.ubi8' -exec ./create-manifest.sh {} \;
