@@ -6,9 +6,17 @@ export ZULU_JDK_VERSION=${ZULU_JDK_VERSION:=11.0.15-1}
 
 BUILD_ARCH=$(arch)
 
-if [[ BUILD_ARCH == "x86_64" ]]; then
-	BUILD_ARCH="amd64"
-fi
+case $BUILD_ARCH in
+    
+    "x86_64")
+        BUILD_ARCH="amd64"
+        ;;
+
+    "aarch64")
+        BUILD_ARCH="arm64"
+        ;;
+
+esac
 
 export MVN="mvn -s settings.xml"
 export MVN_HELP="$MVN -q org.apache.maven.plugins:maven-help-plugin:3.2.0:evaluate -DforceStdout=true"
