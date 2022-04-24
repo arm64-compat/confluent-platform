@@ -3,13 +3,13 @@ version: 2.1
 jobs:
   build-image:
     parameters:
-      module:
+      module: &module-parameter
         description: module to build
         type: string
       build_platform:
         description: build_platform - arm / amd
         type: string
-    environment:
+    environment: &common-env
       DOCKER_REGISTRY: ghcr.io
       DOCKER_REPOSITORY: arm64-compat
       ZULU_JDK_VERSION: 11.0.15-1
@@ -18,7 +18,7 @@ jobs:
     resource_class: << parameters.build_platform >>
     steps:
     - checkout
-    - run:
+    - run: &checkout-submodule
         name: Checkout Submodule
         command: git submodule update --init -- << parameters.module >>
     - restore_cache:
@@ -33,12 +33,28 @@ jobs:
         key: m2-{{ checksum "<< parameters.module >>/pom.xml" }}
         paths:
         - ~/.m2
-    - run:
+    - run: &docker-login
         name: Docker Login
         command: echo $GITHUB_TOKEN | docker login -u $GITHUB_USERNAME --password-stdin $DOCKER_REGISTRY
     - run:
         name: Deploy
         command: ./push-images.sh << parameters.module >>
+
+  publish-manifest:
+    parameters:
+      module: *module-parameter
+    environment: *common-env
+    docker:
+    - image: docker:20.10.14-git
+    steps:
+    - checkout
+    - run: *checkout-submodule
+    - run: *docker-login
+    - run:
+        name: Publish Manifest
+        command: |
+          source ./set-env.sh << parameters.module >>
+          find << parameters.module >> -type f -name '*Dockerfile.ubi8' -exec ./create-manifest.sh {} \;
 
 workflows:
   workflow:
@@ -49,7 +65,7 @@ workflows:
           parameters:
             module:
             - common-docker
-            build_platform:
+            build_platform: &cpu-platforms
             - arm.medium
             - medium
     - build-image:
@@ -62,9 +78,7 @@ workflows:
             - kafka-rest-images
             - control-center-images
             - ksql-images
-            build_platform:
-            - arm.medium
-            - medium
+            build_platform: *cpu-platforms
         requires:
         - build-common-docker-<< matrix.build_platform >>
     - build-image:
@@ -73,8 +87,21 @@ workflows:
           parameters:
             module:
             - kafka-replicator-images
-            build_platform:
-            - arm.medium
-            - medium
+            build_platform: *cpu-platforms
         requires:
         - build-kafka-images-<< matrix.build_platform >>
+    - publish-manifest:
+        name: publish-manifest-<< matrix.module >>
+        matrix:
+          parameters:
+            module:
+            - common-docker
+            - schema-registry-images
+            - kafka-images
+            - kafka-rest-images
+            - control-center-images
+            - ksql-images
+            - kafka-replicator-images
+        requires:
+        - build-<< matrix.module >>-arm.medium
+        - build-<< matrix.module >>-medium
