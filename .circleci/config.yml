@@ -45,9 +45,11 @@ jobs:
       module: *module-parameter
     environment: *common-env
     docker:
-    - image: docker:20.10.14-git
+    - image: cimg/openjdk:11.0.13
     steps:
     - checkout
+    - setup_remote_docker:
+        version: 20.10.11
     - run: *checkout-submodule
     - run: *docker-login
     - run:
