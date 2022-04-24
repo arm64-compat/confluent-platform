@@ -20,7 +20,7 @@ esac
 
 export MVN="mvn -s settings.xml"
 export MVN_HELP="$MVN -q org.apache.maven.plugins:maven-help-plugin:3.2.0:evaluate -DforceStdout=true"
-export CONFLUENT_VERSION=$(sh -c "$MVN_HELP -f common-docker/pom.xml -Dexpression=project.version")
+export CONFLUENT_VERSION=$(sh -c "$MVN_HELP -f $1/pom.xml -Dexpression=project.version")
 export CONFLUENT_REPO_VERSION=$(sh -c "echo $CONFLUENT_VERSION | rev | cut -d. -f2- | rev")
 export CONFLUENT_PACKAGES_REPO="https://packages.confluent.io/rpm/$CONFLUENT_REPO_VERSION"
 export DOCKER_TAG="$CONFLUENT_VERSION-$BUILD_ARCH"
