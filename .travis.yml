@@ -150,7 +150,7 @@ jobs:
     stage: manifest
     if: env(CREATE_MANIFEST) != false
     script: skip
-    deploy: &push_image
+    deploy:
       provider: script
       on:
         all_branches: true
