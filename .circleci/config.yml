@@ -2,6 +2,10 @@ version: 2.1
 
 jobs:
   build-image:
+    parameters:
+      module:
+        description: module to build
+        type: string        
     environment:
       DOCKER_REGISTRY: ghcr.io
       DOCKER_REPOSITORY: arm64-compat
@@ -37,7 +41,8 @@ workflows:
         name: build-<< matrix.module >>
         matrix:
           parameters:
-            module: common-docker
+            module:
+            - common-docker
     - build-image:
         name: build-<< matrix.module >>
         matrix:
@@ -51,9 +56,10 @@ workflows:
         requires:
         - build-common-docker
     - build-image:
-        name: build-<<matirx.module >>
+        name: build-<<matrix.module >>
         matrix:
           parameters:
-            module: kafka-replicator-images
+            module:
+            - kafka-replicator-images
         requires:
         - build-kafka-images
