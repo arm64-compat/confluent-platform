@@ -10,6 +10,7 @@ jobs:
         description: build_platform - arm / amd
         type: string
     environment: &common-env
+      JAVA_TOOL_OPTIONS: -Dhttps.protocols=TLSv1.2
       DOCKER_REGISTRY: ghcr.io
       DOCKER_REPOSITORY: arm64-compat
       ZULU_JDK_VERSION: 11.0.15-1
