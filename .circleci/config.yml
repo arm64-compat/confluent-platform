@@ -5,14 +5,17 @@ jobs:
     parameters:
       module:
         description: module to build
-        type: string        
+        type: string
+      build_platform:
+        description: build_platform - arm / amd
+        type: string
     environment:
       DOCKER_REGISTRY: ghcr.io
       DOCKER_REPOSITORY: arm64-compat
       ZULU_JDK_VERSION: 11.0.15-1
     machine:
       image: ubuntu-2004:202101-01
-    resource_class: arm.medium
+    resource_class: << parameters.build_platform >>
     steps:
     - checkout
     - run:
@@ -41,13 +44,16 @@ workflows:
   workflow:
     jobs:
     - build-image:
-        name: build-<< matrix.module >>
+        name: build-<< matrix.module >>-<< matrix.build_platform >>
         matrix:
           parameters:
             module:
             - common-docker
+            build_platform:
+            - arm.medium
+            - medium
     - build-image:
-        name: build-<< matrix.module >>
+        name: build-<< matrix.module >>-<< matrix.build_platform >>
         matrix:
           parameters:
             module:
@@ -56,13 +62,19 @@ workflows:
             - kafka-rest-images
             - control-center-images
             - ksql-images
+            build_platform:
+            - arm.medium
+            - medium
         requires:
-        - build-common-docker
+        - build-common-docker-<< matrix.build_platform >>
     - build-image:
-        name: build-<<matrix.module >>
+        name: build-<<matrix.module >>-<< matrix.build_platform >>
         matrix:
           parameters:
             module:
             - kafka-replicator-images
+            build_platform:
+            - arm.medium
+            - medium
         requires:
-        - build-kafka-images
+        - build-kafka-images-<< matrix.build_platform >>
