@@ -15,6 +15,9 @@ jobs:
     resource_class: arm.medium
     steps:
     - checkout
+    - run:
+        name: Checkout Submodule
+        command: git submodule update --init -- << parameters.module >>
     - restore_cache:
         key: m2-{{ checksum "<< parameters.module >>/pom.xml" }}
     - run:
