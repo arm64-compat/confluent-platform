@@ -1,6 +1,6 @@
 # Druid ARM64 Compatible Image
 
-[![Build Status](https://app.travis-ci.com/arm64-compat/confluent-platform.svg?branch=main)](https://app.travis-ci.com/arm64-compat/confluent-platform)
+[![CircleCI](https://circleci.com/gh/arm64-compat/confluent-platform/tree/main.svg?style=svg)](https://circleci.com/gh/arm64-compat/confluent-platform/tree/main)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 This repository provides `linux/amd64` & `linux/arm64` compatible images for [Confluent Platform](https://www.confluent.io/). These images can be used with [Confluent HELM Charts](https://github.com/confluentinc/cp-helm-charts).
@@ -17,9 +17,18 @@ This repo is inspired from blog post [Kafka Docker Images for other CPU architec
 
 ## Supported Images & Tags
 
-You can refer to [GHCR Package Repository](https://github.com/orgs/arm64-compat/packages?repo_name=confluent-platform) for available pacakges, versions and tags.
+Supported Projects Include:
 
-The images comes in following variants:
+* [Confluent Zookeeper](https://github.com/arm64-compat/confluent-platform/pkgs/container/confluentinc%2Fcp-zookeeper)
+* [Confluent Kafka](https://github.com/orgs/arm64-compat/packages/container/package/confluentinc%2Fcp-kafka)
+* [Confluent Kafka-Connect](https://github.com/orgs/arm64-compat/packages/container/package/confluentinc%2Fcp-kafka-connect)
+* [Confluent Kafka Rest](https://github.com/arm64-compat/confluent-platform/pkgs/container/confluentinc%2Fcp-kafka-rest)
+* [Confluent Schema Registry](https://github.com/orgs/arm64-compat/packages/container/package/confluentinc%2Fcp-schema-registry)
+* [Confluent KSQLDB Server](https://github.com/orgs/arm64-compat/packages/container/package/confluentinc%2Fcp-ksqldb-server)
+
+More Images can be found at [GHCR Package Repository](https://github.com/orgs/arm64-compat/packages?repo_name=confluent-platform).
+
+The images come in following variants:
 
 * ARM only manifest - `{CONFLUENT_VERSION}-arm64`
 * AMD only manifest - `{CONFLUENT_VERSION}-amd64`
@@ -50,7 +59,7 @@ imageTag: 7.1.1
 
 Refer to chart documentations for more details - https://github.com/confluentinc/cp-helm-charts/tree/master/charts.
 
-## Travis Builds
+## Travis Builds (not-used anymore)
 
 The images are built in parts dependening on how they depend on each other.
 
