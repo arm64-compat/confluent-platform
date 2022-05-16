@@ -1,5 +1,8 @@
 #!/bin/bash -x
 
-source ./set-env.sh $1
+DOCKER_DIR=$1
+shift
 
-$MVN -f $1/pom.xml -Pdocker clean package
+source ./set-env.sh $DOCKER_DIR
+
+$MVN -f $DOCKER_DIR/pom.xml -Pdocker clean package $@
