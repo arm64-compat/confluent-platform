@@ -1,21 +1,28 @@
 [submodule "common-docker"]
 	path = common-docker
 	url = https://github.com/confluentinc/common-docker.git
+	branch = 7.1.1-post
 [submodule "schema-registry-images"]
 	path = schema-registry-images
 	url = https://github.com/confluentinc/schema-registry-images.git
+	branch = 7.1.1-post
 [submodule "kafka-images"]
 	path = kafka-images
 	url = https://github.com/confluentinc/kafka-images.git
+	branch = 7.1.1-post
 [submodule "kafka-rest-images"]
 	path = kafka-rest-images
 	url = https://github.com/confluentinc/kafka-rest-images.git
+	branch = 7.1.1-post
 [submodule "ksql-images"]
 	path = ksql-images
 	url = https://github.com/confluentinc/ksql-images
+	branch = 7.1.1-post
 [submodule "control-center-images"]
 	path = control-center-images
 	url = https://github.com/confluentinc/control-center-images.git
+	branch = 7.1.1-post
 [submodule "kafka-replicator-images"]
 	path = kafka-replicator-images
 	url = https://github.com/confluentinc/kafka-replicator-images.git
+	branch = 7.1.1-post
