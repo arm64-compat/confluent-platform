@@ -34,12 +34,16 @@ jobs:
         key: m2-{{ checksum "<< parameters.module >>/pom.xml" }}
         paths:
         - ~/.m2
-    - run: &docker-login
-        name: Docker Login
-        command: echo $GITHUB_TOKEN | docker login -u $GITHUB_USERNAME --password-stdin $DOCKER_REGISTRY
-    - run:
-        name: Deploy
-        command: ./push-images.sh << parameters.module >>
+    - when:
+        condition:
+          equal: [ main, << pipeline.git.branch >> ]
+        steps:
+        - run: &docker-login
+            name: Docker Login
+            command: echo $GITHUB_TOKEN | docker login -u $GITHUB_USERNAME --password-stdin $DOCKER_REGISTRY
+        - run:
+            name: Deploy
+            command: ./push-images.sh << parameters.module >>
 
   publish-manifest:
     parameters:
@@ -108,3 +112,7 @@ workflows:
         requires:
         - build-<< matrix.module >>-arm.medium
         - build-<< matrix.module >>-medium
+        filters:
+          branches:
+            only:
+            - main
