@@ -4,7 +4,7 @@ export DOCKER_REGISTRY=${DOCKER_REGISTRY:=ghcr.io}
 export DOCKER_REPOSITORY=${DOCKER_REPOSITORY:=arm64-compat}
 export ZULU_JDK_VERSION=${ZULU_JDK_VERSION:=11.0.15-1}
 
-BUILD_ARCH=$(arch)
+BUILD_ARCH=$(uname -m)
 
 case $BUILD_ARCH in
     
