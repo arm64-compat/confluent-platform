@@ -1,4 +1,4 @@
-# Druid ARM64 Compatible Image
+# Confluent-Kafka ARM64 Compatible Image
 
 [![CircleCI](https://circleci.com/gh/arm64-compat/confluent-platform/tree/main.svg?style=svg)](https://circleci.com/gh/arm64-compat/confluent-platform/tree/main)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
@@ -58,26 +58,6 @@ imageTag: 7.1.1
 ```
 
 Refer to chart documentations for more details - https://github.com/confluentinc/cp-helm-charts/tree/master/charts.
-
-## Travis Builds (not-used anymore)
-
-The images are built in parts dependening on how they depend on each other.
-
-The process is run for 2 different archs `arm64`, `amd64`.
-
-Finally a manifest is created for all the images built and published to the docker registry.
-
-It may sometimes be needed to build only specific parts of the build:
-
-```yaml
-env:
-  global:
-    BUILD_ARM: true
-    BUILD_AMD: false
-    CREATE_MANIFEST: false
-```
-
-By default all the images and built, selective jobs can be turned off by trigerring custom builds with the above configuration.
 
 ## License
 
