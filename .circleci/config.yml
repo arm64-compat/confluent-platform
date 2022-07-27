@@ -1,10 +1,7 @@
 version: 2.1
 
-dependencies:
-  pre:
-    - sudo update-alternatives --set java /usr/lib/jvm/jdk1.8.0/bin/java
-    - sudo update-alternatives --set javac /usr/lib/jvm/java-8-openjdk-amd64/bin/javac
-    - echo 'export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64' >> ~/.circlerc
+orbs:
+  sdkman: joshdholtz/sdkman@0.2.0
 
 jobs:
   build-image:
@@ -24,6 +21,11 @@ jobs:
       image: ubuntu-2004:current
     resource_class: << parameters.build_platform >>
     steps:
+    - sdkman/setup-sdkman
+    - sdkman/sdkman-install java 8.0.342-zulu
+    - run:
+        name: Java Version
+        command: java -version
     - checkout
     - run: &checkout-submodule
         name: Checkout Submodule

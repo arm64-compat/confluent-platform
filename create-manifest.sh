@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 DOCKER_DIR=$(dirname $1)
 DOCKER_DIR=$DOCKER_DIR/pom.xml
