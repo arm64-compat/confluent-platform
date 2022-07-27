@@ -16,7 +16,7 @@ jobs:
       JAVA_TOOL_OPTIONS: -Dhttps.protocols=TLSv1.2
       DOCKER_REGISTRY: ghcr.io
       DOCKER_REPOSITORY: arm64-compat
-      ZULU_JDK_VERSION: 11.0.15-1
+      ZULU_JDK_VERSION: 11.0.16-1
     machine:
       image: ubuntu-2004:current
     resource_class: << parameters.build_platform >>
