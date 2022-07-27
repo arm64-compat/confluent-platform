@@ -22,7 +22,9 @@ jobs:
     resource_class: << parameters.build_platform >>
     steps:
     - sdkman/setup-sdkman
-    - sdkman/sdkman-install java 8.0.342-zulu
+    - sdkman/sdkman-install:
+        candidate: java
+        version: 8.0.342-zulu
     - run:
         name: Java Version
         command: java -version
