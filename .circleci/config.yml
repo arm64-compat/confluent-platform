@@ -1,5 +1,8 @@
 version: 2.1
 
+java:
+  version: oraclejdk8
+
 jobs:
   build-image:
     parameters:
@@ -15,7 +18,7 @@ jobs:
       DOCKER_REPOSITORY: arm64-compat
       ZULU_JDK_VERSION: 11.0.15-1
     machine:
-      image: ubuntu-2004:202101-01
+      image: ubuntu-2004:current
     resource_class: << parameters.build_platform >>
     steps:
     - checkout
